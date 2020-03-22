@@ -10,17 +10,20 @@ url_to_open = "https://en.wikipedia.org/wiki/List_of_postal_codes_of_Canada:_M"
 html = requests.get(url_to_open)
 
 soup = BeautifulSoup(html.content, 'lxml')
-rows = soup.find("table").find("tbody").find_all("tr")
-#print(rows)
+table = soup.find("table").find("tbody").find_all("tr")
 
-postalCodes = []
+postalCodes = {}
 i = 0
-for row in rows:
-    column = row.find_all('td')
-    print(column[0].get_text())
-    #i += 1
-#    postalCodes.append(cells[i].get_text())
- #   print(postalCodes) 
+for row in table:
+    rows = row.find_all('td')
+    for x in rows:
+        key = x.get_text().strip()[:3]
+        value = x.get_text().strip()[3:]
+        postalCodes[key] = value
+
+column_names = ['Postal Code', 'Borough', 'Neighbourhood']
+df  = pd.DataFrame.from_dict(data=postalCodes, orient='index')
+df.head()
     
 
 
